@@ -3,6 +3,8 @@ Window to GIF
 
 This script allows you to make a gif easily from a window.
 
+![Example](img/example.gif)
+
 Installation
 ------------
 
