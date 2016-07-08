@@ -8,10 +8,24 @@ readonly DEFAULT_DURATION=10
 readonly DEFAULT_FILE=out.gif
 
 main () {
+    check_for_byzanz
     parse_arguments "${@}"
     capture_window_dimensions
     perform_initial_pause
     record_window
+}
+
+check_for_byzanz () {
+    if ! which byzanz-record >/dev/null
+    then
+        cat <<EOF >&2
+Did not find byzanz installation.
+Please install byzanz-record using the following command:
+
+    sudo apt-get install byzanz
+EOF
+        exit 1
+    fi
 }
 
 parse_arguments () {
