@@ -1,0 +1,64 @@
+#!/bin/zsh
+
+set -euo pipefail
+
+readonly INITIAL_DELAY=10
+
+readonly DEFAULT_DURATION=10
+readonly DEFAULT_FILE=out.gif
+
+main () {
+    parse_arguments "${@}"
+    capture_window_dimensions
+    perform_initial_pause
+    record_window
+}
+
+parse_arguments () {
+    local -a duration file
+
+    zparseopts d:=duration -duration:=duration f:=file -file:=file
+
+    FILE="${file[2]:-$DEFAULT_FILE}"
+    DURATION="${duration[2]:-$DEFAULT_DURATION}"
+
+    readonly FILE
+    readonly DURATION
+}
+
+capture_window_dimensions () {
+    local XWININFO=$(xwininfo)
+
+    read WINDOW_X <<< $(awk -F: '/Absolute upper-left X/{print $2}' <<< "${XWININFO}")
+    read WINDOW_Y <<< $(awk -F: '/Absolute upper-left Y/{print $2}' <<< "${XWININFO}")
+    read WINDOW_WIDTH <<< $(awk -F: '/Width/{print $2}' <<< "${XWININFO}")
+    read WINDOW_HEIGHT <<< $(awk -F: '/Height/{print $2}' <<< "${XWININFO}")
+
+    readonly WINDOW_X
+    readonly WINDOW_Y
+    readonly WINDOW_WIDTH
+    readonly WINDOW_HEIGHT
+}
+
+perform_initial_pause () {
+    printf -- "Delaying ${INITIAL_DELAY} seconds. After that, byzanz will start\n"
+
+    for (( i=${INITIAL_DELAY}; i>0; --i )) ; do
+        printf -- "%d\n" $i
+        sleep 1
+    done
+}
+
+record_window () {
+    printf -- "Recording to ${FILE}. "
+
+    beep
+    byzanz-record --verbose --delay=0 --x="${WINDOW_X}" --y="${WINDOW_Y}" --width="${WINDOW_WIDTH}" --height="${WINDOW_HEIGHT}" "${FILE}"
+    beep
+}
+
+beep () {
+    paplay /usr/share/sounds/KDE-Im-Irc-Event.ogg &
+}
+
+main "${@}"
