@@ -6,6 +6,12 @@ This script allows you to make a gif easily from a window.
 Installation
 ------------
 
+This requires byzanz. You can install this on a recent version of ubuntu with the following:
+
+```bash
+apt-get install byzanz
+```
+
 If you have [antigen](https://github.com/zsh-users/antigen) then just run the following:
 
 ```bash
