@@ -41,7 +41,7 @@ parse_arguments () {
 }
 
 capture_window_dimensions () {
-    local XWININFO=$(xwininfo)
+    local XWININFO="$(xwininfo)"
 
     read WINDOW_X <<< $(awk -F: '/Absolute upper-left X/{print $2}' <<< "${XWININFO}")
     read WINDOW_Y <<< $(awk -F: '/Absolute upper-left Y/{print $2}' <<< "${XWININFO}")
