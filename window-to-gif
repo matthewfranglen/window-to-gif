@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-set -euo pipefail
+set -eu
 
 readonly INITIAL_DELAY=10
 
